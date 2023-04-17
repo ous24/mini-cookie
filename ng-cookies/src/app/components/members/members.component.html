@@ -1,0 +1,56 @@
+<div class="members">
+    <div class="list">
+        <h1>Members List</h1>
+        <ul>
+            <li *ngFor="let member of members">
+                <h3>{{member.name}}</h3>
+                <button (click)="deleteMember(member.id)" >Remove Member</button>
+            </li>
+        </ul>
+    </div>
+    <div class="form">
+        <main>
+            <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="on">
+              <h1>Create Member</h1>
+              <div class="form-control">
+                
+                <label for="name">Name</label>
+                <input
+                  formControlName="name"
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Member name"
+                />
+                <span
+                  *ngIf="
+                    form.get('name')?.touched && form.get('name')?.hasError('required')
+                  "
+                >
+                  * Member Name is required
+                </span>
+              </div>
+          
+              <div class="form-control">
+                <label for="email">Email address</label>
+                <input
+                  formControlName="email"
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  placeholder="email"
+                />
+                <span
+                  *ngIf="
+                    form.get('email')?.touched && form.get('email')?.hasError('required')
+                  "
+                >
+                  * Email is required
+                </span>
+              </div>
+              <button type="submit" [disabled]="!form.valid">Submit</button>
+              <!-- {{ form.value | json }} -->
+            </form>
+          </main>
+    </div>
+</div>
