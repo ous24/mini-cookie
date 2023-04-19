@@ -6,14 +6,14 @@ const logger = require ('./middleware/logger')
 const bodyParser = require ('body-parser');
 const cookieParser = require('cookie-parser')
 const members = require('./Members');
-
+const auth=require ('./middleware/auth')
 const tokenMAp = {}
 
 // Create an express app
 const app = express();
 
 //enable cors
-app.use(cors())
+app.use(cors({credentials: true, origin: 'http://localhost:4200'}))
 //Init logger
 // app.use(logger)
 
@@ -33,11 +33,11 @@ app.use(express.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Members API routes
-app.use('/api/members', require('./routes/api/members'))
+app.use('/api/members', auth, require('./routes/api/members'))
 
 // Dummy auth
 
-app.get('/private', (req, res)=> res.send('hello authorized user'));
+app.get('/private', auth, (req, res)=> res.send('hello authorized user'));
 app.post('/login', (req, res)=>{
   const user = members.find((_member)=> req.body.name === _member.name)
   if(!user || req.body.password !== '123'){
@@ -52,9 +52,7 @@ app.post('/login', (req, res)=>{
     expiresAt,
     userId : user.id
   }
-  res.header('Access-Control-Allow-Origin', '*')
   res.cookie("session_token", sessionToken, {maxAge: expiresAt})
-  console.log(tokenMAp)
   res.send({user: user, token:sessionToken})
 
 })

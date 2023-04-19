@@ -3,7 +3,8 @@ const uuid = require('uuid');
 const router = express.Router();
 let members = require('../../Members');
 //Get all members
-router.get('/', (req, res)=>res.json({data:members}));
+router.get('/', (req, res)=>{
+    res.json({data:members})});
 
 //Get a single member
 router.get('/:id', (req, res)=>{
